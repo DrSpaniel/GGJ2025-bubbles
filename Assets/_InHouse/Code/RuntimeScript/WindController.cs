@@ -40,9 +40,13 @@ public class WindController : MonoBehaviour
     {
         Vector3 mouseWorldPosition = GetMouseWorldPosition();
         CalculateWindParameters(mouseWorldPosition);
-        ApplyWindForce();
         UpdateMaterialProperties();
         DebugWind(windDirection, windDirection * windMagnitude);
+    }
+
+    private void FixedUpdate()
+    {
+        ApplyWindForce();
     }
 
     private Vector3 GetMouseWorldPosition()
@@ -61,8 +65,8 @@ public class WindController : MonoBehaviour
 
         if (windDistance > maxDistance)
         {
-            //windDirection = fallbackWindDirection;
-            //windMagnitude = fallbackWindStrength;
+            windDirection = fallbackWindDirection;
+            windMagnitude = fallbackWindStrength;
         }
         else
         {
@@ -86,13 +90,14 @@ public class WindController : MonoBehaviour
         if (windSpeed.magnitude > 0.01f)
         {
             Vector3 movementDirection = new Vector3(windDirection.x, 0, windDirection.z);
-            Quaternion targetRotation = Quaternion.LookRotation(-movementDirection);
-            _targetTransform.parent.rotation = Quaternion.Slerp(_targetTransform.parent.rotation, targetRotation, Time.deltaTime);
+            if (movementDirection != Vector3.zero) { 
+                Quaternion targetRotation = Quaternion.LookRotation(-movementDirection);
+                _targetTransform.parent.rotation = Quaternion.Slerp(_targetTransform.parent.rotation, targetRotation, Time.deltaTime);
+            }
         }
 
         // apply air resistance
         _targetRigidbody.AddForce(-_targetRigidbody.linearVelocity * 0.1f, ForceMode.Acceleration);
-        print(_targetRigidbody.linearVelocity);
        }
 
     private void UpdateMaterialProperties()

@@ -9,8 +9,8 @@ public class BubbleDeformer : MonoBehaviour
     [SerializeField] private WindController windController;
 
     [Header("Deformation Settings")]
-    [SerializeField] private float maxSquash = 0.90f;  // Along wind direction
-    [SerializeField] private float maxStretch = 1.00f; // Perpendicular to wind
+    [SerializeField] private float maxSquash = 0.95f;  // Along wind direction
+    [SerializeField] private float maxStretch = 1.05f; // Perpendicular to wind
     [SerializeField] private float windStrengthFactor = 1f;
 
     // Stores the child's original scale
@@ -39,14 +39,12 @@ public class BubbleDeformer : MonoBehaviour
         float strength = Mathf.InverseLerp(0f, windController.maxStrength, rawMagnitude);
         float baseStrength = strength * windStrengthFactor;
 
-        // 假设 strength 已经在 [0,1] 范围内
+        // Add some dynamic frequency to the wind
         float dynamicFrequency = 1f + (strength * 1f);
-        // 当 strength=0 时，频率=1；当 strength=1 时，频率=4
-
-        // 以 Time.time * speed 作为 Perlin Noise 的输入，可以得到平滑随机
-        float noiseValue = Mathf.PerlinNoise(Time.time * 1.5f, 0f); // 1.5f 是速度可调
-                                                                    // noiseValue 会在 [0,1] 内波动，我们让它中心在 0，再缩小范围
-        float noiseOffset = (noiseValue - 0.5f) * dynamicFrequency; // 这里 0.2f 表示最大±0.1 的幅度
+        // Use Time.time * speed as input to Perlin Noise for smooth randomness
+        float noiseValue = Mathf.PerlinNoise(Time.time * 1.5f, 0f); 
+            // noiseValue will fluctuate within [0,1], center it around 0 and shrink the range
+        float noiseOffset = (noiseValue - 0.5f) * dynamicFrequency; 
 
         strength = Mathf.Clamp01(baseStrength + noiseOffset);
 
