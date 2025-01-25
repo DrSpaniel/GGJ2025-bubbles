@@ -2145,7 +2145,7 @@ SphereCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 4
+  m_Radius: 3.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1899601939
 MonoBehaviour:
@@ -2160,7 +2160,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   indicatorPrefab: {fileID: 7252482793938513092, guid: a2efa57d4fcfddd47a8aefc254f1fe07, type: 3}
-  spawnCooldown: 0.01
   indicatorLifeTime: 5
 --- !u!54 &1899601940
 Rigidbody:
