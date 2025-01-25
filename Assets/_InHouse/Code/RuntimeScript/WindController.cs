@@ -8,7 +8,8 @@ public class WindController : MonoBehaviour
     [SerializeField] private bool debug = false;
 
     [Header("Target & Wind Settings")]
-    [SerializeField] private GameObject targetGameObject; 
+    [SerializeField] private GameObject targetGameObject;
+    [SerializeField] private GameObject windGameObject;
     [SerializeField] private float maxDistance = 4f;
     [SerializeField] private float maxObjectSpeed = 7f;
     public float maxStrength = 20f;
@@ -21,6 +22,7 @@ public class WindController : MonoBehaviour
     private Camera _mainCamera;
     private Transform _targetTransform;
     private Rigidbody _targetRigidbody;
+    private ParticleSystem _targetParticleSystem;
 
     
 
@@ -29,6 +31,7 @@ public class WindController : MonoBehaviour
         _mainCamera = Camera.main;
         _targetTransform = targetGameObject.transform;
         _targetRigidbody = targetGameObject.transform.parent.GetComponent<Rigidbody>();
+        _targetParticleSystem = windGameObject.transform.GetChild(0).GetComponent<ParticleSystem>();
     }
 
     private void Start()
@@ -46,7 +49,30 @@ public class WindController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ApplyWindForce();
+        if (windDirection != Vector3.zero)
+        {
+            //Update indicator for wind direction
+            windGameObject.transform.position = GetMouseWorldPosition();
+            Quaternion targetRotation = Quaternion.LookRotation(windDirection, Vector3.up);
+            Quaternion adjustment = Quaternion.Euler(0, 180, 0);
+            windGameObject.transform.rotation = targetRotation * adjustment;
+            Vector3 cameraDirection = (Camera.main.transform.position - windGameObject.transform.position).normalized;
+            float distance = 0.5f; // distance from camera
+            windGameObject.transform.position += cameraDirection * distance;
+        }
+        if (Input.GetMouseButton(0))
+        {
+            if (!_targetParticleSystem.isPlaying)
+            {
+                _targetParticleSystem.Play();
+            }
+            ApplyWindForce();
+        }else{
+            if (_targetParticleSystem.isPlaying)
+            {
+                _targetParticleSystem.Stop();
+            }
+        }
     }
 
     private Vector3 GetMouseWorldPosition()
@@ -87,6 +113,7 @@ public class WindController : MonoBehaviour
             _targetRigidbody.linearVelocity = _targetRigidbody.linearVelocity.normalized * maxObjectSpeed;
         }
 
+        // rotate object towards wind direction
         if (windSpeed.magnitude > 0.01f)
         {
             Vector3 movementDirection = new Vector3(windDirection.x, 0, windDirection.z);
