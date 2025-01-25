@@ -22,7 +22,9 @@ public class WindController : MonoBehaviour
     private Camera _mainCamera;
     private Transform _targetTransform;
     private Rigidbody _targetRigidbody;
+    // VFX/SFX
     private ParticleSystem _targetParticleSystem;
+    private AudioSource _targetAudioSource;
 
     
 
@@ -32,6 +34,7 @@ public class WindController : MonoBehaviour
         _targetTransform = targetGameObject.transform;
         _targetRigidbody = targetGameObject.transform.parent.GetComponent<Rigidbody>();
         _targetParticleSystem = windGameObject.transform.GetChild(0).GetComponent<ParticleSystem>();
+        _targetAudioSource = windGameObject.transform.GetChild(1).GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -66,11 +69,18 @@ public class WindController : MonoBehaviour
             {
                 _targetParticleSystem.Play();
             }
+            if(!_targetAudioSource.isPlaying){
+                _targetAudioSource.Play();
+            }
             ApplyWindForce();
         }else{
             if (_targetParticleSystem.isPlaying)
             {
                 _targetParticleSystem.Stop();
+            }
+            if (_targetAudioSource.isPlaying)
+            {
+                _targetAudioSource.Stop();
             }
         }
     }
