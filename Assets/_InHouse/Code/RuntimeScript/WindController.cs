@@ -3,84 +3,112 @@ using UnityEngine;
 public class WindController : MonoBehaviour
 {
     public Vector3 windDirection;
-    // Calculate the wind direction
     public float windMagnitude;
+    public float planeIncrement = -0.1f;
     [SerializeField] private bool debug = false;
 
     [Header("Target & Wind Settings")]
-    [SerializeField] private GameObject targetGameObject;
+    [SerializeField] private GameObject targetGameObject; 
     [SerializeField] private float maxDistance = 4f;
+    [SerializeField] private float maxObjectSpeed = 7f;
     public float maxStrength = 20f;
 
     [Header("Fallback Wind (Out of Range)")]
-    [SerializeField] private Vector3 fallbackWindDirection = Vector3.up * 0.1f;
+    [SerializeField] private Vector3 fallbackWindDirection = Vector3.up;
     [SerializeField] private float fallbackWindStrength = 1f;
 
     private Material _targetMaterial;
     private Camera _mainCamera;
     private Transform _targetTransform;
+    private Rigidbody _targetRigidbody;
+
+    
 
     private void Awake()
     {
         _mainCamera = Camera.main;
         _targetTransform = targetGameObject.transform;
+        _targetRigidbody = targetGameObject.transform.parent.GetComponent<Rigidbody>();
     }
 
-    void Start()
+    private void Start()
     {
         _targetMaterial = targetGameObject.GetComponent<Renderer>().material;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        Vector3 mouseWorldPosition = GetMouseWorldPosition(-0.1f);
+        Vector3 mouseWorldPosition = GetMouseWorldPosition();
+        CalculateWindParameters(mouseWorldPosition);
+        ApplyWindForce();
+        UpdateMaterialProperties();
+        DebugWind(windDirection, windDirection * windMagnitude);
+    }
 
-        // Calculate distance Vector between target and mouse
+    private Vector3 GetMouseWorldPosition()
+    {
+        if (_mainCamera == null) return Vector3.zero; 
+
+        Vector3 mousePosition = Input.mousePosition;
+        float objectDepth = _mainCamera.WorldToScreenPoint(_targetTransform.position).z + planeIncrement;
+        return _mainCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, objectDepth));
+    }
+
+    private void CalculateWindParameters(Vector3 mouseWorldPosition)
+    {
         Vector3 toMouse = mouseWorldPosition - _targetTransform.position;
         float windDistance = toMouse.magnitude;
 
         if (windDistance > maxDistance)
         {
-            // If not in range, use fallback values, we assume liquid fall down by gravity 
-            windDirection = fallbackWindDirection;
-            windMagnitude = fallbackWindStrength;
-
-        }else{
-            // other wise calculate the wind direction and strength
-            windDirection = (mouseWorldPosition - targetGameObject.transform.position).normalized;
-            // project the wind distance to a value between 0 and 1
-            float t = windDistance / maxDistance;
+            //windDirection = fallbackWindDirection;
+            //windMagnitude = fallbackWindStrength;
+        }
+        else
+        {
+            windDirection = toMouse.normalized;
+            float clampedDistance = Mathf.Clamp(windDistance, 0f, maxDistance);
+            float t = clampedDistance / maxDistance;
             windMagnitude = Mathf.Lerp(maxStrength, 0f, t);
-        }
-
-        Vector3 windSpeed = windDirection * windMagnitude;
-
-        // Update the material
-        _targetMaterial.SetVector("_WindDirection", windDirection.normalized);
-        _targetMaterial.SetFloat("_WindStrength", windSpeed.magnitude);
-
-
-        // Apply force to the target object
-        targetGameObject.transform.parent.GetComponent<Rigidbody>().AddForce(-windSpeed * .5f, ForceMode.Acceleration);
-
-        if (debug)
-        {
-            Debug.Log(-windDirection.normalized * windSpeed.magnitude);
-            Debug.DrawLine(targetGameObject.transform.position, targetGameObject.transform.position + windDirection * windMagnitude, Color.red);
-        }
-        if (windSpeed.magnitude > 0.01f)
-        {
-            Vector3 movementDirection = new Vector3(windDirection.normalized.x, 0, windDirection.normalized.z);
-            Quaternion targetRotation = Quaternion.LookRotation(-movementDirection);
-            targetGameObject.transform.parent.rotation = Quaternion.Slerp(targetGameObject.transform.parent.rotation, targetRotation, Time.deltaTime * 1f);
         }
     }
 
-    // obtain mouse world position
-    private Vector3 GetMouseWorldPosition(float planeIncrement){
-        Vector3 mousePosition = Input.mousePosition;
-        float objectDepth = _mainCamera.WorldToScreenPoint(targetGameObject.transform.position).z + planeIncrement;
-        return _mainCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, objectDepth));
+    private void ApplyWindForce()
+    {
+        Vector3 windSpeed = windDirection * windMagnitude;
+        _targetRigidbody.AddForce(-windSpeed * 0.5f, ForceMode.Acceleration);
+
+        if (_targetRigidbody.linearVelocity.magnitude > maxObjectSpeed)
+        {
+            _targetRigidbody.linearVelocity = _targetRigidbody.linearVelocity.normalized * maxObjectSpeed;
+        }
+
+        if (windSpeed.magnitude > 0.01f)
+        {
+            Vector3 movementDirection = new Vector3(windDirection.x, 0, windDirection.z);
+            Quaternion targetRotation = Quaternion.LookRotation(-movementDirection);
+            _targetTransform.parent.rotation = Quaternion.Slerp(_targetTransform.parent.rotation, targetRotation, Time.deltaTime);
+        }
+
+        // apply air resistance
+        _targetRigidbody.AddForce(-_targetRigidbody.linearVelocity * 0.1f, ForceMode.Acceleration);
+        print(_targetRigidbody.linearVelocity);
+       }
+
+    private void UpdateMaterialProperties()
+    {
+        if (!_targetMaterial.GetVector("_WindDirection").Equals(windDirection.normalized))
+            _targetMaterial.SetVector("_WindDirection", windDirection.normalized);
+
+        if (!_targetMaterial.GetFloat("_WindStrength").Equals(windMagnitude))
+            _targetMaterial.SetFloat("_WindStrength", windMagnitude);
+    }
+
+    private void DebugWind(Vector3 windDirection, Vector3 windSpeed)
+    {
+        if (!debug) return;
+
+        Debug.Log($"Wind Direction: {windDirection}, Wind Speed: {windSpeed.magnitude}");
+        Debug.DrawLine(_targetTransform.position, _targetTransform.position + windDirection * windMagnitude, Color.red);
     }
 }
