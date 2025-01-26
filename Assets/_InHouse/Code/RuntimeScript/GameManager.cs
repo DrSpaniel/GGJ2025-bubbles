@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
     // Make an instance of this class
     private static GameManager instance;
 
@@ -67,9 +66,8 @@ public class GameManager : MonoBehaviour
                 // reset? load new scene? etc
                 break;
             case GameState.Restart:
-                Time.timeScale = 1;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 GameManager.gamestate = GameManager.GameState.Playing;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 break;
             case GameState.Exit:
                 Application.Quit();

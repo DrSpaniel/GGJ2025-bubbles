@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 
 public class BubbleHealthComponent : MonoBehaviour
@@ -16,6 +17,27 @@ public class BubbleHealthComponent : MonoBehaviour
         // initialize health
         currentHealth = maxHealth;
         //takeDamageOverTime
+        StartCoroutine(ApplyDamageOverTime());
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        ResetHealth();
+    }
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        StopAllCoroutines();
         StartCoroutine(ApplyDamageOverTime());
     }
 
