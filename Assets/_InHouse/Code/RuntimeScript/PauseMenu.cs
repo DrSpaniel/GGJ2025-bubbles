@@ -27,7 +27,11 @@ public class PauseMenu : MonoBehaviour
             Resume();
         }
     }
-
+    public void LoadMainMenu()
+    {
+        pauseMenuUI.SetActive(false);
+        GameManager.gamestate = GameManager.GameState.MainMenu;
+    }
     public void Resume(){
         pauseMenuUI.SetActive(false);
         GameManager.gamestate = GameManager.GameState.Playing;

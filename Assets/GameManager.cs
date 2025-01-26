@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
         {
             case GameState.MainMenu:
                 SceneManager.LoadScene("StartScene");
+                GameManager.gamestate = GameManager.GameState.Playing;
                 break;
             case GameState.Playing:
                 Time.timeScale = 1;

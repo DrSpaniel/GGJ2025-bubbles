@@ -974,7 +974,7 @@ GameObject:
   - component: {fileID: 402419564}
   - component: {fileID: 402419566}
   m_Layer: 0
-  m_Name: Manager
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8205,7 +8205,7 @@ GameObject:
   - component: {fileID: 491048368387159890}
   - component: {fileID: 818001695500376973}
   m_Layer: 5
-  m_Name: Exit
+  m_Name: Return to Main Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8231,9 +8231,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Exit
-
-'
+  m_text: Return to Main Menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9e7b2e80e2281274ba94b922835bc498, type: 2}
   m_sharedMaterial: {fileID: 7485313489859528703, guid: 9e7b2e80e2281274ba94b922835bc498, type: 2}
@@ -8350,7 +8348,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1445859928}
         m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: Quit
+        m_MethodName: LoadMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8982,17 +8980,17 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 847975544}
+  - {fileID: 728903554}
+  - {fileID: 1487068597}
+  - {fileID: 1215689190}
   - {fileID: 1823688467}
   - {fileID: 1926320799}
   - {fileID: 157207114}
   - {fileID: 432432461}
   - {fileID: 2013410475}
-  - {fileID: 847975544}
   - {fileID: 343425176}
-  - {fileID: 745771258}
-  - {fileID: 728903554}
-  - {fileID: 1487068597}
   - {fileID: 586655307}
+  - {fileID: 745771258}
   - {fileID: 1119505035}
-  - {fileID: 1215689190}
   - {fileID: 402419565}
