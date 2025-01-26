@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
@@ -29,14 +30,19 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume(){
         pauseMenuUI.SetActive(false);
+        GameManager.gamestate = GameManager.GameState.Playing;
         //gameManager.StartMusic();
-        Time.timeScale = 1;
     }
 
     public void Pause(){
         pauseMenuUI.SetActive(true);
+        GameManager.gamestate = GameManager.GameState.Paused;
         //gameManager.PauseMusic();
-        Time.timeScale = 0;
+    }
+
+    public void Restart(){
+        pauseMenuUI.SetActive(false);
+        GameManager.gamestate = GameManager.GameState.Restart;
     }
 
     public void Quit(){

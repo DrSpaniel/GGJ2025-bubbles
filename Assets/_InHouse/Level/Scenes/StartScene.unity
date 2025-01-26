@@ -640,7 +640,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1656173267}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -833,7 +833,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1704054362}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -1298,7 +1298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAuto: 0
   autoTime: 0
-  sceneName: Bubble Testing Scene
+  sceneName: PlayScene
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

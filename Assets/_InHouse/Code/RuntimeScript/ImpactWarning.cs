@@ -4,18 +4,21 @@ public class ImpactWarning : MonoBehaviour
 {
     [SerializeField] private GameObject indicatorPrefab;
 
-    [SerializeField] private float indicatorLifeTime = 2f;
+    [SerializeField] private float indicatorLifeTime = 1.5f;
+    [SerializeField] private float cooldownTime = 0.5f;
 
-    private void Start()
-    {
-        print("Script attached and running.");
-    }
+    private float nextAllowedTime = 0f;
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
-        foreach(ContactPoint contactPoint in collision.contacts) {
-            GameObject indicator = Instantiate(indicatorPrefab, contactPoint.point, Quaternion.identity);
-            Destroy(indicator, indicatorLifeTime);
+        if (Time.time >= nextAllowedTime)
+        {
+            nextAllowedTime = Time.time + cooldownTime;
+            foreach (ContactPoint contactPoint in collision.contacts)
+            {
+                GameObject indicator = Instantiate(indicatorPrefab, contactPoint.point, Quaternion.identity);
+                Destroy(indicator, indicatorLifeTime);
+            }
         }
     }
 }
