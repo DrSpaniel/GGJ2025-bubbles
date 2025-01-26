@@ -994,7 +994,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   greenBarImage: {fileID: 2039144226}
-  maxHealth: 100
 --- !u!4 &402419565
 Transform:
   m_ObjectHideFlags: 0
@@ -1572,6 +1571,7 @@ GameObject:
   - component: {fileID: 847975544}
   - component: {fileID: 847975546}
   - component: {fileID: 847975545}
+  - component: {fileID: 847975547}
   m_Layer: 3
   m_Name: BubbleParent
   m_TagString: Untagged
@@ -1645,6 +1645,24 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &847975547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847975543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d3f867faab499468b55c5e93733cec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  avoidCollisionList:
+    serializedVersion: 2
+    m_Bits: 0
+  maxHealth: 100
+  defaultCollisionDamage: 30
+  soapHeals: 50
 --- !u!1 &885442844
 GameObject:
   m_ObjectHideFlags: 0
@@ -7368,7 +7386,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a3280638c18ca3b40afa67d9ef27465f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.481267
+      value: 4.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a3280638c18ca3b40afa67d9ef27465f, type: 3}
       propertyPath: m_LocalPosition.z
